@@ -117,6 +117,9 @@ Refer to the [Hyprland wiki](https://wiki.hyprland.org/Nix/Hyprland-on-Home-Mana
 - Use `overview:toggle` dispatcher to toggle workspace overview on current monitor
 - Use `overview:close` to close the overview on current monitor if opened
 - Use `overview:open` to open the overview on current monitor if closed
+- Use `overview:interceptClicks` to make the overview intercept left clicks
+- Use `overview:dontInterceptClicks` to not allow the overview to intercept left clicks
+
 - Adding the `all` argument to these dispatchers would toggle / open / close overview on all monitors
 ### Styling
 #### Colors
