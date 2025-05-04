@@ -62,3 +62,4 @@ namespace Config {
 }
 
 extern int hyprsplitNumWorkspaces;
+extern bool interceptLeftClicks;

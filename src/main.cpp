@@ -55,6 +55,8 @@ float Config::overrideAnimSpeed = 0;
 
 float Config::dragAlpha = 0.2;
 
+bool interceptLeftClicks = true;
+
 int hyprsplitNumWorkspaces = -1;
 
 Hyprutils::Memory::CSharedPointer<HOOK_CALLBACK_FN> g_pRenderHook;
@@ -171,7 +173,7 @@ void onWorkspaceChange(void* thisptr, SCallbackInfo& info, std::any args) {
 
 // event hook for click and drag interaction
 void onMouseButton(void* thisptr, SCallbackInfo& info, std::any args) {
-
+    if (interceptLeftClicks == false) return;
     const auto e = std::any_cast<IPointer::SButtonEvent>(args);
 
     if (e.button != BTN_LEFT) return;
@@ -373,6 +375,15 @@ static SDispatchResult dispatchCloseOverview(std::string arg) {
     return SDispatchResult{};
 }
 
+static SDispatchResult dispatchInterceptClicks(std::string arg) {
+    interceptLeftClicks = true;
+    return SDispatchResult{};
+}
+static SDispatchResult dispatchDontInterceptClicks(std::string arg) {
+    interceptLeftClicks = false;
+    return SDispatchResult{};
+}
+
 void* findFunctionBySymbol(HANDLE inHandle, const std::string func, const std::string sym) {
     // should return all functions
     auto funcSearch = HyprlandAPI::findFunctionsByName(inHandle, func);
@@ -509,6 +520,8 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE inHandle) {
     HyprlandAPI::addDispatcher(pHandle, "overview:toggle", ::dispatchToggleOverview);
     HyprlandAPI::addDispatcher(pHandle, "overview:open", ::dispatchOpenOverview);
     HyprlandAPI::addDispatcher(pHandle, "overview:close", ::dispatchCloseOverview);
+    HyprlandAPI::addDispatcher(pHandle, "overview:interceptClicks", ::dispatchInterceptClicks);
+    HyprlandAPI::addDispatcher(pHandle, "overview:dontInterceptClicks", ::dispatchDontInterceptClicks);
 
     g_pRenderHook = HyprlandAPI::registerCallbackDynamic(pHandle, "render", onRender);
 
